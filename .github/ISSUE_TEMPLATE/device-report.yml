@@ -1,0 +1,66 @@
+name: Device compatibility report
+description: Report whether Warm Dusk Preview works on your TV
+title: "[Device] "
+labels: ["device-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing. Every report updates the public compatibility table.
+        Package: `com.warmdusk.tv.preview` v0.1.0-preview
+  - type: input
+    id: brand
+    attributes:
+      label: TV brand
+      placeholder: Sony, TCL, Hisense, Chromecast, Fire TV, ...
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      placeholder: e.g. Bravia XR-77A80J, onn. 4K Streaming Box
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS version
+      placeholder: Google TV 12, Fire OS 8, ...
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Install succeeded?
+      options: ["Yes", "No - insufficient storage", "No - other (describe below)"]
+    validations:
+      required: true
+  - type: dropdown
+    id: overlay
+    attributes:
+      label: Overlay visible over Netflix/DRM app?
+      options: ["Yes", "No", "Not tested"]
+    validations:
+      required: true
+  - type: dropdown
+    id: mute_hold
+    attributes:
+      label: Hold MUTE ~1s opens panel over content?
+      options: ["Yes", "No", "No mute button on remote", "Not tested"]
+    validations:
+      required: true
+  - type: dropdown
+    id: short_mute
+    attributes:
+      label: Short MUTE still mutes normally?
+      options: ["Yes", "No", "Not tested"]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Setup path used, errors, remote type, anything that helps the next person
+    validations:
+      required: false

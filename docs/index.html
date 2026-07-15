@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+  Warm Dusk landing page — deliberately zero third-party requests.
+  No analytics, no cookies, no external fonts, no CDNs. That's part of the brand.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warm Dusk — Blue Light Filter &amp; Night Mode for Google TV, Android TV and Fire TV</title>
+<meta name="description" content="Warm Dusk warms and dims everything on your TV — Netflix included — automatically at sunset. Night mode for Sony Bravia, TCL, Hisense, Chromecast with Google TV and Fire TV. Hold mute to adjust.">
+<meta property="og:title" content="Warm Dusk — the night mode your TV forgot">
+<meta property="og:description" content="A warm, dimmable filter over everything on your TV. Automatic at sunset. Hold mute to adjust.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Warm Dusk","operatingSystem":"Android TV, Google TV, Fire TV","applicationCategory":"UtilitiesApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Blue light filter and night mode for TV. Warms and dims everything, automatically in the evening."}
+</script>
+<style>
+  :root{
+    --bg:#0b0f14; --navy:#0f1b2d; --navy2:#16233b;
+    --amber:#ff7a00; --amber2:#ffb067;
+    --text:rgba(255,255,255,.92); --soft:rgba(255,255,255,.72); --muted:rgba(255,255,255,.55); --faint:rgba(255,255,255,.35);
+    --line:rgba(255,255,255,.09); --card:rgba(255,255,255,.045);
+    --radius:20px;
+    --font:Inter,Geist,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font); background:var(--bg); color:var(--text);
+    line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  ::selection{background:rgba(255,122,0,.35)}
+  a{color:var(--amber2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  img,svg{display:block;max-width:100%}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  section{padding:96px 0}
+  h1,h2,h3{font-weight:700;letter-spacing:-.02em;line-height:1.12}
+  h1{font-size:clamp(2.4rem,6vw,4.2rem)}
+  h2{font-size:clamp(1.7rem,3.6vw,2.5rem);margin-bottom:16px}
+  h3{font-size:1.12rem;margin-bottom:8px}
+  p.lead{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--soft);max-width:34em}
+  .muted{color:var(--muted)} .small{font-size:.85rem}
+  .kicker{
+    display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--amber2);margin-bottom:14px;
+  }
+
+  /* ── warmth overlay: the site demos the product on itself ── */
+  #warmLayer,#dimLayer{
+    position:fixed;inset:0;pointer-events:none;z-index:9000;
+    opacity:0;transition:opacity .8s ease;
+  }
+  #warmLayer{background:#ff7a00}
+  #dimLayer{background:#000}
+
+  /* ── fixed quick-panel control ── */
+  #panel{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+    z-index:9500;display:flex;flex-direction:column;align-items:center;gap:6px;
+    width:min(680px,calc(100vw - 24px));
+  }
+  #panelBar{
+    display:flex;align-items:center;gap:8px;width:100%;
+    background:rgba(11,17,26,.82);backdrop-filter:blur(14px);
+    border:1px solid rgba(255,122,0,.35);border-radius:999px;
+    padding:10px 16px;box-shadow:0 12px 40px rgba(0,0,0,.55);
+  }
+  .chip{
+    font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--muted);
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;
+    padding:7px 12px;cursor:pointer;white-space:nowrap;transition:all .2s;
+  }
+  .chip:hover{color:var(--text)}
+  .chip[aria-pressed="true"]{
+    color:#fff;background:rgba(255,122,0,.28);border-color:var(--amber);
+  }
+  #panelBar input[type=range]{
+    flex:1;min-width:60px;accent-color:var(--amber);cursor:pointer;height:20px;
+  }
+  #panelVal{font-size:.8rem;font-weight:700;color:var(--soft);min-width:2.2em;text-align:right}
+  #panelCap{font-size:.72rem;color:var(--faint);text-align:center}
+  @media(max-width:560px){
+    .chip{padding:6px 9px;font-size:.72rem}
+    #panelBar{padding:8px 10px;gap:5px}
+  }
+
+  /* ── hero ── */
+  #hero{
+    position:relative;padding:120px 0 80px;
+    background:
+      radial-gradient(1200px 500px at 70% -10%, rgba(255,122,0,.13), transparent 60%),
+      linear-gradient(180deg,#0d1526 0%, var(--bg) 70%);
+    overflow:hidden;
+  }
+  #hero .glowdrift{
+    position:absolute;inset:-30%;pointer-events:none;
+    background:radial-gradient(600px 300px at 30% 80%, rgba(255,122,0,.06), transparent 70%);
+    animation:drift 26s ease-in-out infinite alternate;
+  }
+  @keyframes drift{from{transform:translateX(-4%)}to{transform:translateX(6%)}}
+  .cta{
+    display:inline-block;font-weight:700;font-size:1rem;border-radius:14px;cursor:pointer;
+    padding:14px 26px;border:0;text-decoration:none !important;transition:transform .15s,box-shadow .15s;
+  }
+  .cta.primary{
+    color:#160a00;background:linear-gradient(135deg,var(--amber),var(--amber2));
+    box-shadow:0 10px 34px rgba(255,122,0,.35);
+  }
+  .cta.primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,122,0,.45)}
+  .cta.ghost{
+    color:var(--soft);border:1px solid var(--line);background:rgba(255,255,255,.03);
+  }
+  .cta.ghost:hover{border-color:rgba(255,255,255,.25);color:var(--text)}
+  .ctarow{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+
+  /* ── TV frame mockup ── */
+  .tv{
+    position:relative;aspect-ratio:16/9;border-radius:16px;
+    border:5px solid #05070b;outline:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(120deg,#233a63 0%,#3a2a55 45%,#84402a 80%,#d98a4e 100%);
+    box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 90px rgba(255,140,40,.12);
+    overflow:hidden;
+  }
+  .tv::after{ /* screen sheen */
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,transparent 30%);
+  }
+  .tv .stand{display:none}
+  .tv .scene{position:absolute;inset:0}
+  .tv .warmth{position:absolute;inset:0;background:rgba(255,122,0,.18)}
+  .tvpanel{
+    position:absolute;left:50%;bottom:9%;transform:translateX(-50%);
+    display:flex;gap:6px;align-items:center;
+    background:rgba(11,17,26,.88);border:1px solid rgba(255,122,0,.4);border-radius:999px;
+    padding:5px 10px;box-shadow:0 6px 24px rgba(0,0,0,.5);white-space:nowrap;
+  }
+  .tvchip{font-size:.55rem;font-weight:600;color:rgba(255,255,255,.6);padding:3px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.14)}
+  .tvchip.on{color:#fff;background:rgba(255,122,0,.35);border-color:var(--amber)}
+  @media(max-width:700px){.tvchip{font-size:.48rem;padding:2px 5px}}
+  .heroGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  @media(max-width:880px){.heroGrid{grid-template-columns:1fr;gap:40px}}
+
+  /* ── remote illustration ── */
+  .remoteWrap{position:relative;display:flex;justify-content:center}
+  .remote{
+    width:88px;border-radius:44px;padding:26px 0 34px;
+    background:linear-gradient(180deg,#151b25,#0b0f16);
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.55);
+    display:flex;flex-direction:column;align-items:center;gap:16px;
+  }
+  .dpad{width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.16);position:relative;background:rgba(255,255,255,.04)}
+  .dpad::after{content:"";position:absolute;inset:18px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .rbtn{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.12)}
+  .mutekey{
+    position:relative;width:26px;height:26px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--amber2), var(--amber));
+    box-shadow:0 0 18px rgba(255,122,0,.75);
+  }
+  .mutekey svg{position:absolute;inset:5px}
+  .holdring{
+    position:absolute;inset:-7px;border-radius:50%;
+  }
+  .holdring circle{
+    fill:none;stroke:var(--amber2);stroke-width:2.4;stroke-linecap:round;
+    stroke-dasharray:113;stroke-dashoffset:113;
+    animation:hold 2.6s ease-in-out infinite;
+    transform:rotate(-90deg);transform-origin:center;
+  }
+  @keyframes hold{
+    0%{stroke-dashoffset:113;opacity:.4}
+    45%{stroke-dashoffset:0;opacity:1}
+    60%{stroke-dashoffset:0;opacity:1}
+    75%,100%{stroke-dashoffset:113;opacity:0}
+  }
+  .holdlabel{position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:.7rem;color:var(--amber2);font-weight:600;white-space:nowrap}
+
+  /* ── cards ── */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;transition:border-color .25s;
+  }
+  .card:hover{border-color:rgba(255,140,40,.35)}
+  .card .ic{width:38px;height:38px;margin-bottom:16px;color:var(--amber2)}
+  .card p{color:var(--muted);font-size:.95rem}
+
+  /* ── steps ── */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:step;margin-top:36px}
+  @media(max-width:820px){.steps{grid-template-columns:1fr}}
+  .step{position:relative;padding:26px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+  .step::before{
+    counter-increment:step;content:counter(step);
+    display:inline-flex;align-items:center;justify-content:center;
+    width:32px;height:32px;border-radius:50%;margin-bottom:14px;
+    font-weight:700;color:#160a00;background:linear-gradient(135deg,var(--amber),var(--amber2));
+  }
+  details{
+    border:1px solid var(--line);border-radius:14px;background:var(--card);
+    padding:16px 20px;margin-top:10px;
+  }
+  details summary{cursor:pointer;font-weight:600;color:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details summary::after{content:"+";color:var(--amber2);font-size:1.2rem;font-weight:400}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--muted);margin-top:10px;font-size:.95rem}
+
+  /* ── compatibility badges ── */
+  .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .badge{
+    font-size:.85rem;font-weight:600;color:var(--soft);
+    border:1px solid var(--line);border-radius:999px;padding:9px 18px;background:var(--card);
+  }
+  .badge em{font-style:normal;font-size:.7rem;color:var(--amber2);margin-left:8px;letter-spacing:.06em}
+  .badge em.test{color:var(--faint)}
+
+  /* ── pricing ── */
+  .prices{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:36px auto 0}
+  @media(max-width:700px){.prices{grid-template-columns:1fr}}
+  .price{
+    border:1px solid var(--line);border-radius:var(--radius);padding:34px;background:var(--card);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .price.pro{border-color:rgba(255,122,0,.5);background:linear-gradient(180deg,rgba(255,122,0,.07),var(--card))}
+  .price .amount{font-size:2.4rem;font-weight:700;letter-spacing:-.02em}
+  .price .amount span{font-size:1rem;color:var(--amber2);font-weight:700;vertical-align:middle;margin-left:8px}
+  .price ul{list-style:none;margin:16px 0 22px;display:flex;flex-direction:column;gap:9px}
+  .price li{color:var(--soft);font-size:.95rem;padding-left:24px;position:relative}
+  .price li::before{content:"✓";position:absolute;left:0;color:var(--amber2);font-weight:700}
+
+  /* ── stats / proof ── */
+  .stats{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:40px}
+  .stat{
+    text-align:center;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--card);padding:22px 30px;min-width:200px;flex:1;max-width:280px;
+  }
+  .stat b{display:block;font-size:1.5rem;letter-spacing:-.02em}
+  .stat span{color:var(--muted);font-size:.85rem}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+  @media(max-width:820px){.quotes{grid-template-columns:1fr}}
+  .quote{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);padding:24px;font-size:.95rem;color:var(--soft)}
+  .quote footer{margin-top:12px;color:var(--faint);font-size:.8rem}
+
+  /* ── final CTA ── */
+  #get{
+    text-align:center;border-radius:28px;margin:0 24px;
+    background:
+      radial-gradient(700px 300px at 50% 120%, rgba(255,122,0,.28), transparent 70%),
+      linear-gradient(180deg,var(--navy),#1a1226);
+    border:1px solid rgba(255,140,40,.25);
+    padding:90px 24px;
+  }
+  .storebtn{
+    display:inline-flex;align-items:center;gap:10px;margin:8px;
+    border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.4);
+    color:var(--text);padding:13px 22px;font-weight:600;text-decoration:none !important;
+  }
+  .storebtn:hover{border-color:rgba(255,255,255,.3)}
+  .storebtn small{display:block;font-size:.65rem;color:var(--muted);font-weight:400;text-align:left;line-height:1.2}
+
+  footer.site{
+    padding:56px 24px 140px;text-align:center;color:var(--faint);font-size:.85rem;
+  }
+  footer.site nav{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin:14px 0 22px}
+  footer.site a{color:var(--muted)}
+  .wordmark{font-weight:700;letter-spacing:-.02em;font-size:1.1rem;color:var(--soft)}
+  .wordmark::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,var(--amber2),var(--amber));margin-right:8px;
+    box-shadow:0 0 10px rgba(255,122,0,.7)}
+
+  /* ── scroll reveal ── */
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .rv.in{opacity:1;transform:none}
+
+  /* ── video modal ── */
+  #vmodal{
+    position:fixed;inset:0;z-index:9600;display:none;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.75);backdrop-filter:blur(6px);padding:24px;
+  }
+  #vmodal.open{display:flex}
+  #vmodal .box{width:min(900px,100%);}
+  #vmodal .vid{
+    aspect-ratio:16/9;border-radius:18px;border:1px solid var(--line);
+    background:linear-gradient(120deg,#233a63,#84402a);
+    display:flex;align-items:center;justify-content:center;color:var(--soft);font-weight:600;
+  }
+  #vmodal .close{margin-top:14px;text-align:center}
+
+  .splitGrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+  @media(max-width:880px){.splitGrid{grid-template-columns:1fr;gap:40px}}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .rv{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- The product, demonstrated on the page itself -->
+<div id="warmLayer" aria-hidden="true"></div>
+<div id="dimLayer" aria-hidden="true"></div>
+
+<!-- ═══════════ 1 · HERO ═══════════ -->
+<header id="hero">
+  <div class="glowdrift" aria-hidden="true"></div>
+  <div class="wrap heroGrid">
+    <div>
+      <span class="kicker">For Google TV · Android TV · Fire TV</span>
+      <h1>The night mode your TV&nbsp;forgot.</h1>
+      <p class="lead" style="margin-top:20px">
+        Warm Dusk warms and dims everything on your TV — Netflix included —
+        automatically at sunset. Hold mute to adjust. That's it.
+      </p>
+      <div class="ctarow">
+        <a class="cta primary" href="#get">Get Warm Dusk — free</a>
+        <button class="cta ghost" id="playDemo">Watch the 15-second demo</button>
+      </div>
+    </div>
+    <div class="remoteWrap" style="flex-direction:column;gap:34px;align-items:center">
+      <div class="tv" style="width:100%" aria-label="TV showing a movie with the Warm Dusk level panel overlaid">
+        <div class="scene"></div>
+        <div class="warmth"></div>
+        <div class="tvpanel" role="img" aria-label="Warm Dusk quick panel">
+          <span class="tvchip">Off</span><span class="tvchip">Auto</span><span class="tvchip">Soft</span>
+          <span class="tvchip on">Medium</span><span class="tvchip">Strong</span><span class="tvchip">🕯 Candle</span>
+        </div>
+      </div>
+      <div class="remote" aria-hidden="true" style="transform:rotate(8deg)">
+        <div class="rbtn"></div>
+        <div class="dpad"></div>
+        <div class="mutekey">
+          <span class="holdlabel">hold 1 sec</span>
+          <svg class="holdring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18"/></svg>
+          <svg viewBox="0 0 24 24" fill="#160a00"><path d="M3 10v4h4l5 5V5L7 10H3zm14.5 2 2.2-2.2-1.4-1.4L16 10.6l-2.3-2.2-1.4 1.4L14.6 12l-2.3 2.2 1.4 1.4 2.3-2.2 2.3 2.2 1.4-1.4L17.5 12z"/></svg>
+        </div>
+        <div class="rbtn" style="opacity:.4"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ 2 · THE GESTURE ═══════════ -->
+<section id="gesture">
+  <div class="wrap splitGrid rv">
+    <div class="remoteWrap">
+      <div class="remote">
+        <div class="rbtn"></div>
+        <div class="dpad"></div>
+        <div class="mutekey">
+          <span class="holdlabel">hold 1 sec</span>
+          <svg class="holdring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18"/></svg>
+          <svg viewBox="0 0 24 24" fill="#160a00"><path d="M3 10v4h4l5 5V5L7 10H3zm14.5 2 2.2-2.2-1.4-1.4L16 10.6l-2.3-2.2-1.4 1.4L14.6 12l-2.3 2.2 1.4 1.4 2.3-2.2 2.3 2.2 1.4-1.4L17.5 12z"/></svg>
+        </div>
+        <div class="rbtn" style="opacity:.4"></div>
+      </div>
+    </div>
+    <div>
+      <span class="kicker">The gesture</span>
+      <h2>Hold mute. That's it.</h2>
+      <p class="lead" style="font-size:1.05rem">
+        You never leave what you're watching. Hold the mute button for one second and
+        a small panel appears over the movie: <b style="color:var(--text)">◄ ►</b> picks a level,
+        <b style="color:var(--text)">▲ ▼</b> fine-tunes the warmth, and it fades away on its own.
+        A short press still mutes, exactly like before. No menus, no settings apps,
+        no pausing the show while your eyes give up.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 3 · HOW IT WORKS ═══════════ -->
+<section id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:640px;margin:0 auto 44px">
+      <span class="kicker">Why it feels built-in</span>
+      <h2>One filter. Everything. Every night.</h2>
+    </div>
+    <div class="grid3">
+      <div class="card rv">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <h3>Covers everything</h3>
+        <p>One warm layer across every app and every screen — Netflix, YouTube, live TV, the home menu. Not a picture-mode trick that streaming apps ignore.</p>
+      </div>
+      <div class="card rv">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v2M21 12h-2M5 12H3M18.4 5.6l-1.4 1.4M7 7 5.6 5.6"/><path d="M17 12a5 5 0 1 0-10 0"/><path d="M2 17h20M5 21h14"/></svg>
+        <h3>Knows when it's evening</h3>
+        <p>Ramps up gently in the evening, holds overnight, and fades out in the morning. Extra-dims for late-night viewing so the panel — and your eyes — rest easier.</p>
+      </div>
+      <div class="card rv">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 4v5c0 4.4-3 7.4-7 9-4-1.6-7-4.6-7-9V7l7-4z"/><path d="M9.5 12.5l2 2 3.5-4"/></svg>
+        <h3>Zero data. Zero ads. Under 1&nbsp;MB.</h3>
+        <p>Collects nothing and phones home to no one. Smaller than a single photo — it even fits on storage-starved TVs where other apps won't.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 4 · SETUP ═══════════ -->
+<section id="setup" style="padding-top:24px">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:640px;margin:0 auto">
+      <span class="kicker">Setup</span>
+      <h2>About 5 minutes, once.</h2>
+      <p class="lead" style="margin:0 auto">Guided, brand-by-brand instructions for Sony, TCL, Hisense, Chromecast and Fire&nbsp;TV. If you can pair Bluetooth headphones, you can do this.</p>
+    </div>
+    <div class="steps rv">
+      <div class="step"><h3>Download the preview</h3><p class="muted">Free, from the button below. Store versions come once the preview proves itself.</p></div>
+      <div class="step"><h3>Set up from your computer</h3><p class="muted">A guided, copy-paste walkthrough ships with the download — brand-by-brand, about 5 minutes, one time.</p></div>
+      <div class="step"><h3>Hold mute</h3><p class="muted">That's the whole manual. Enjoy tonight.</p></div>
+    </div>
+    <details class="rv" style="max-width:680px;margin:26px auto 0">
+      <summary>Why does Warm Dusk need a one-time pairing?</summary>
+      <p>TVs don't let apps draw over other apps unless the owner grants it — that's a good rule.
+      The setup uses the same official pairing mechanism developers use to grant those permissions,
+      once, and touches nothing else. Everything it enables is revocable anytime in your TV's settings.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ═══════════ 5 · COMPATIBILITY ═══════════ -->
+<section id="compat" style="padding-top:24px">
+  <div class="wrap rv">
+    <span class="kicker">Compatibility</span>
+    <h2>Works where you watch.</h2>
+    <div class="badges">
+      <span class="badge" id="sony">Sony BRAVIA <em>TESTED</em></span>
+      <span class="badge" id="chromecast">Chromecast with Google TV <em class="test">IN TESTING</em></span>
+      <span class="badge">Google TV Streamer <em class="test">IN TESTING</em></span>
+      <span class="badge" id="tcl">TCL <em class="test">IN TESTING</em></span>
+      <span class="badge" id="hisense">Hisense <em class="test">IN TESTING</em></span>
+      <span class="badge" id="firetv">Fire TV <em class="test">IN TESTING</em></span>
+      <span class="badge">NVIDIA Shield <em class="test">IN TESTING</em></span>
+    </div>
+    <p class="small muted" style="margin-top:18px">Any Android&nbsp;TV or Google&nbsp;TV device (Android 8+) should work. Report your device and we'll add it: <a href="https://github.com/conorgg123/warmdusk/blob/main/COMPATIBILITY.md">live compatibility table →</a></p>
+  </div>
+</section>
+
+<!-- ═══════════ 6 · PRICING ═══════════ -->
+<section id="pricing" style="padding-top:24px">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:640px;margin:0 auto">
+      <span class="kicker">Pricing</span>
+      <h2>Free where it matters.<br>Pay once if you love it.</h2>
+    </div>
+    <div class="prices">
+      <div class="price rv">
+        <h3>Free</h3>
+        <div class="amount">$0</div>
+        <ul>
+          <li>The full warm filter, over everything</li>
+          <li>The hold-mute quick panel</li>
+          <li>Warmth and dimming controls in the quick panel</li>
+          <li>No trial, no nags, no ads — ever.</li>
+        </ul>
+        <a class="cta ghost" href="#get" style="text-align:center">Get Warm Dusk</a>
+      </div>
+      <div class="price pro rv">
+        <h3>Pro</h3>
+        <div class="amount">$4.99 <span>ONCE</span></div>
+        <ul>
+          <li>Sunset-synced scheduling for your exact location</li>
+          <li>Custom presets &amp; per-day schedules</li>
+          <li>Ultra-warm red mode &amp; custom filter colors</li>
+          <li>Try free for 7 evenings — no card</li>
+        </ul>
+        <a class="cta primary" href="#get" style="text-align:center">Unlock Pro</a>
+        <p class="small" style="color:var(--faint);margin-top:12px">No subscription required. Optional Warm Dusk+ sync for multi-TV homes coming later.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 7 · WHY NOW / PROOF ═══════════ -->
+<section id="proof" style="padding-top:24px">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;max-width:640px;margin:0 auto">
+      <span class="kicker">Why this exists</span>
+      <h2>Your phone got night mode in 2016.</h2>
+      <p class="lead" style="margin:12px auto 0">Your TV — the biggest, brightest screen in the house, watched almost exclusively at night — is still waiting. We stopped waiting.</p>
+    </div>
+    <div class="stats rv">
+      <div class="stat"><b>300M+</b><span>Google TVs shipped without a night mode</span></div>
+      <div class="stat"><b>0.6 MB</b><span>install — smaller than one photo</span></div>
+      <div class="stat"><b>0</b><span>trackers, ads, or accounts</span></div>
+    </div>
+    <!-- Testimonials intentionally disabled until REAL quotes exist (harvest from P-8 seeding threads
+         + device reports). Never ship placeholder social proof — trust is the product.
+    <div class="quotes rv">
+      <div class="quote">QUOTE<footer>— attribution</footer></div>
+    </div>
+    -->
+  </div>
+</section>
+
+<!-- ═══════════ 8 · FAQ ═══════════ -->
+<section id="faq" style="padding-top:24px">
+  <div class="wrap" style="max-width:760px">
+    <div class="rv" style="text-align:center"><span class="kicker">Questions</span><h2>Fair questions, straight answers.</h2></div>
+    <div class="rv">
+      <details><summary>Does it work over Netflix and YouTube?</summary><p>Yes — everything. Warm Dusk draws over every app, every input and the home screen. That's the whole point.</p></details>
+      <details><summary>Will it survive turning the TV off?</summary><p>Yes. Warm Dusk starts with the TV and remembers your schedule. Set it once.</p></details>
+      <details><summary>Does it collect anything?</summary><p>No. No analytics, no ads, no accounts — and no internet permission at all, so the app physically cannot send anything, ever. Don't take our word for it: every release publishes its SHA-256, and the APK's manifest is inspectable with standard Android tools. It will stay this way, because it's the reason many of you are here.</p></details>
+      <details><summary>What if my remote has no mute button?</summary><p>Teach Warm Dusk any button: settings → "Panel button" → hold the key you want. Home-row shortcuts work regardless.</p></details>
+      <details><summary>Is the setup safe?</summary><p>It uses the same official pairing mechanism Android provides to developers, and it grants exactly two things: "draw over other apps" (the filter itself) and an accessibility service (so the app can notice you holding the mute key — key events only, and with no internet permission nothing can leave the TV regardless). Both are visible and revocable in your TV's settings anytime.</p></details>
+      <details><summary>Which TVs work?</summary><p>Any Android TV / Google TV device on Android 8 or newer, plus Fire TV. See the <a href="#compat">compatibility table</a> for tested models.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 9 · FINAL CTA ═══════════ -->
+<section style="padding-top:24px">
+  <div id="get" class="rv">
+    <h2 style="font-size:clamp(2rem,4.5vw,3rem)">Your eyes will notice tonight.</h2>
+    <p class="muted" style="margin:8px 0 26px">Free preview out now. Store version — and one-coffee Pro — once enough of you want it.</p>
+    <!-- PHASE 0 CTA: public binary-only release. App source remains private. -->
+    <div>
+      <a class="storebtn" href="https://github.com/conorgg123/warmdusk/releases/tag/v0.1.0-preview"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg><span>FREE PREVIEW<small>v0.1.0 · 0.6 MB APK</small></span></a>
+    </div>
+    <p class="small" style="margin-top:16px;color:var(--faint)">Verify your download — SHA-256:<br><code style="font-size:.68rem;word-break:break-all">D2966E50F8FA13B619816A3A1FD8D01C786036EED83BAD10FF01CF3368C3644D</code></p>
+    <!--
+    <div>
+      <a class="storebtn" href="#"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5V3.5c0-.6.4-1.1.9-1.3l10.3 10.3L3.9 21.8c-.5-.2-.9-.7-.9-1.3zm13.8-5.4L6.05 21.34l8.49-8.49 2.26 2.25zm3.35-3.35c.4.3.65.77.65 1.25s-.25.95-.65 1.25l-2.15 1.25-2.5-2.5 2.5-2.5 2.15 1.25zM6.05 2.66l10.76 6.24-2.26 2.25-8.5-8.49z"/></svg><span>GET IT ON<small>Google Play</small></span></a>
+      <a class="storebtn" href="#"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M13.2 2.6c.8-1 2.4-.7 2.8.5l4.6 13.9c.3 1-.4 2-1.5 2H4.9c-1.1 0-1.8-1-1.5-2L8 3.1c.4-1.2 2-1.5 2.8-.5l1.2 1.5 1.2-1.5zM12 8.5 9.5 15h5L12 8.5z"/></svg><span>AVAILABLE AT<small>Amazon Appstore</small></span></a>
+    </div>
+    -->
+    <p class="small" style="margin-top:18px"><a href="#setup">or set up from your computer →</a></p>
+  </div>
+</section>
+
+<!-- ═══════════ 10 · FOOTER ═══════════ -->
+<footer class="site">
+  <div class="wordmark">Warm Dusk</div>
+  <nav>
+    <a href="#faq">Privacy — we collect nothing</a>
+    <a href="#compat">Compatibility</a>
+    <a href="#setup">Setup guide</a>
+    <a href="#">Contact</a>
+  </nav>
+  <p>Made by two people who watch too many movies after dark.</p>
+</footer>
+
+<!-- ═══════════ video modal ═══════════ -->
+<div id="vmodal" role="dialog" aria-modal="true" aria-label="Demo video">
+  <div class="box">
+    <video id="demoVid" class="vid" src="warmdusk-demo-15s.mp4" preload="metadata" controls playsinline style="width:100%;height:auto;object-fit:cover"></video>
+    <div class="close"><button class="cta ghost" id="closeDemo">Close</button></div>
+  </div>
+</div>
+
+<!-- ═══════════ the live warmth panel ═══════════ -->
+<div id="panel">
+  <div id="panelBar" role="group" aria-label="Try Warm Dusk's warmth on this page">
+    <button class="chip" data-v="0">Off</button>
+    <button class="chip" data-v="25">Soft</button>
+    <button class="chip" data-v="50">Medium</button>
+    <button class="chip" data-v="75">Strong</button>
+    <button class="chip" data-v="95">🕯 Candle</button>
+    <input type="range" id="warmth" min="0" max="100" step="5" value="0" aria-label="Warmth level">
+    <span id="panelVal">0</span>
+  </div>
+  <div id="panelCap">You're feeling it right now. This is what Warm Dusk does to your TV.</div>
+</div>
+
+<script>
+(function(){
+  var warm = document.getElementById('warmLayer');
+  var dim  = document.getElementById('dimLayer');
+  var slider = document.getElementById('warmth');
+  var val = document.getElementById('panelVal');
+  var chips = document.querySelectorAll('#panelBar .chip');
+
+  function apply(v, save){
+    v = Math.max(0, Math.min(100, v|0));
+    warm.style.opacity = (v/100)*0.34;
+    dim.style.opacity  = (v/100)*0.18;
+    slider.value = v;
+    val.textContent = v;
+    chips.forEach(function(c){
+      c.setAttribute('aria-pressed', String(parseInt(c.dataset.v,10) === v));
+    });
+    if (save) { try { localStorage.setItem('warmdusk_demo_warmth', String(v)); } catch(e){} }
+  }
+
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){ apply(parseInt(c.dataset.v,10), true); });
+  });
+  slider.addEventListener('input', function(){ apply(parseInt(slider.value,10), true); });
+
+  // Default: what Warm Dusk itself would do — Soft in the evening, Off in daylight.
+  var saved = null;
+  try { saved = localStorage.getItem('warmdusk_demo_warmth'); } catch(e){}
+  if (saved !== null) {
+    apply(parseInt(saved,10), false);
+  } else {
+    var h = new Date().getHours();
+    apply((h >= 19 || h < 7) ? 25 : 0, false);
+  }
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // Video modal
+  var modal = document.getElementById('vmodal');
+  var vid = document.getElementById('demoVid');
+  function openModal(){
+    modal.classList.add('open');
+    vid.currentTime = 0;
+    vid.play().catch(function(){}); // autoplay may be blocked; controls remain
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    vid.pause();
+  }
+  document.getElementById('playDemo').addEventListener('click', openModal);
+  document.getElementById('closeDemo').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+  vid.addEventListener('ended', function(){ setTimeout(closeModal, 600); });
+})();
+</script>
+
+</body>
+</html>
