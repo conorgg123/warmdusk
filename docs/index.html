@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
 <!--
-  Warm Dusk landing page — deliberately zero third-party requests.
-  No analytics, no cookies, no external fonts, no CDNs. That's part of the brand.
+  Warm Dusk landing page — no analytics, cookies, external fonts, or CDNs.
+  The waitlist form sends one user-initiated POST to Buttondown; nothing loads from it beforehand.
 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Warm Dusk — Blue Light Filter &amp; Night Mode for Google TV, Android TV and Fire TV</title>
-<meta name="description" content="Warm Dusk warms and dims everything on your TV — Netflix included — automatically at sunset. Night mode for Sony Bravia, TCL, Hisense, Chromecast with Google TV and Fire TV. Hold mute to adjust.">
+<meta name="description" content="Warm Dusk warms and dims everything on your TV — Netflix included — automatically every evening. Night mode for Sony Bravia, TCL, Hisense, Chromecast with Google TV and Fire TV. Hold mute to adjust.">
   <link rel="canonical" href="https://warmdusk.com/">
-  <meta property="og:url" content="https://warmdusk.com/">
 <meta property="og:title" content="Warm Dusk — the night mode your TV forgot">
-<meta property="og:description" content="A warm, dimmable filter over everything on your TV. Automatic at sunset. Hold mute to adjust.">
+<meta property="og:description" content="A warm, dimmable filter over everything on your TV. Automatic every evening. Hold mute to adjust.">
 <meta property="og:type" content="website">
+  <meta property="og:url" content="https://warmdusk.com/">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Warm Dusk","operatingSystem":"Android TV, Google TV, Fire TV","applicationCategory":"UtilitiesApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Blue light filter and night mode for TV. Warms and dims everything, automatically in the evening."}
 </script>
@@ -260,6 +260,11 @@
   }
   .storebtn:hover{border-color:rgba(255,255,255,.3)}
   .storebtn small{display:block;font-size:.65rem;color:var(--muted);font-weight:400;text-align:left;line-height:1.2}
+  .waitform{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:620px;margin:24px auto 8px}
+  .waitform input[type="email"]{min-width:min(340px,100%);border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.35);color:var(--text);padding:14px 16px;font:inherit;outline:none}
+  .waitform input[type="email"]:focus{border-color:var(--amber2);box-shadow:0 0 0 3px rgba(255,176,103,.13)}
+  .waitform button{cursor:pointer}
+  .heroDemo{width:100%;aspect-ratio:16/9;border-radius:18px;border:1px solid var(--line);object-fit:cover;background:#05070a;box-shadow:0 26px 80px rgba(0,0,0,.36)}
 
   footer.site{
     padding:56px 24px 140px;text-align:center;color:var(--faint);font-size:.85rem;
@@ -314,22 +319,15 @@
       <h1>The night mode your TV&nbsp;forgot.</h1>
       <p class="lead" style="margin-top:20px">
         Warm Dusk warms and dims everything on your TV — Netflix included —
-        automatically at sunset. Hold mute to adjust. That's it.
+        automatically every evening. Hold mute to adjust. That's it.
       </p>
       <div class="ctarow">
-        <a class="cta primary" href="#get">Get Warm Dusk — free</a>
+        <a class="cta primary" href="#get">Get launch setup + founder pricing</a>
         <button class="cta ghost" id="playDemo">Watch the 15-second demo</button>
       </div>
     </div>
     <div class="remoteWrap" style="flex-direction:column;gap:34px;align-items:center">
-      <div class="tv" style="width:100%" aria-label="TV showing a movie with the Warm Dusk level panel overlaid">
-        <div class="scene"></div>
-        <div class="warmth"></div>
-        <div class="tvpanel" role="img" aria-label="Warm Dusk quick panel">
-          <span class="tvchip">Off</span><span class="tvchip">Auto</span><span class="tvchip">Soft</span>
-          <span class="tvchip on">Medium</span><span class="tvchip">Strong</span><span class="tvchip">🕯 Candle</span>
-        </div>
-      </div>
+      <video class="heroDemo" src="warmdusk-demo-15s.mp4" autoplay muted loop playsinline preload="metadata" aria-label="15-second Warm Dusk product demonstration"></video>
       <div class="remote" aria-hidden="true" style="transform:rotate(8deg)">
         <div class="rbtn"></div>
         <div class="dpad"></div>
@@ -461,7 +459,7 @@
       </div>
       <div class="price pro rv">
         <h3>Pro</h3>
-        <div class="amount">$4.99 <span>ONCE</span></div>
+        <div class="amount">$4.99 <span>FOUNDER · ONCE</span></div>
         <ul>
           <li>Sunset-synced scheduling for your exact location</li>
           <li>Custom presets &amp; per-day schedules</li>
@@ -469,7 +467,7 @@
           <li>Try free for 7 evenings — no card</li>
         </ul>
         <a class="cta primary" href="#get" style="text-align:center">Unlock Pro</a>
-        <p class="small" style="color:var(--faint);margin-top:12px">No subscription required. Optional Warm Dusk+ sync for multi-TV homes coming later.</p>
+        <p class="small" style="color:var(--faint);margin-top:12px">First 14 production days, then $7.99 once. Optional $19.99 Founder Supporter tier has the same features. No subscription in the main app.</p>
       </div>
     </div>
   </div>
@@ -484,8 +482,8 @@
       <p class="lead" style="margin:12px auto 0">Your TV — the biggest, brightest screen in the house, watched almost exclusively at night — is still waiting. We stopped waiting.</p>
     </div>
     <div class="stats rv">
-      <div class="stat"><b>300M+</b><span>Google TVs shipped without a night mode</span></div>
-      <div class="stat"><b>0.6 MB</b><span>install — smaller than one photo</span></div>
+      <div class="stat"><b>300M+</b><span>monthly active Google TV / Android TV devices</span></div>
+      <div class="stat"><b>&lt;1 MB</b><span>install — smaller than one photo</span></div>
       <div class="stat"><b>0</b><span>trackers, ads, or accounts</span></div>
     </div>
     <!-- Testimonials intentionally disabled until REAL quotes exist (harvest from P-8 seeding threads
@@ -502,12 +500,12 @@
   <div class="wrap" style="max-width:760px">
     <div class="rv" style="text-align:center"><span class="kicker">Questions</span><h2>Fair questions, straight answers.</h2></div>
     <div class="rv">
-      <details><summary>Does it work over Netflix and YouTube?</summary><p>Yes — everything. Warm Dusk draws over every app, every input and the home screen. That's the whole point.</p></details>
+      <details><summary>Does it work over Netflix and YouTube?</summary><p>On our tested Sony Google TV, yes — including DRM playback and the home screen. Compatibility varies by TV, Android version, and app; external HDMI inputs are outside the Android TV app layer.</p></details>
       <details><summary>Will it survive turning the TV off?</summary><p>Yes. Warm Dusk starts with the TV and remembers your schedule. Set it once.</p></details>
       <details><summary>Does it collect anything?</summary><p>No. No analytics, no ads, no accounts — and no internet permission at all, so the app physically cannot send anything, ever. Don't take our word for it: every release publishes its SHA-256, and the APK's manifest is inspectable with standard Android tools. It will stay this way, because it's the reason many of you are here.</p></details>
-      <details><summary>What if my remote has no mute button?</summary><p>Teach Warm Dusk any button: settings → "Panel button" → hold the key you want. Home-row shortcuts work regardless.</p></details>
+      <details><summary>What if my remote has no mute button?</summary><p>Teaching Warm Dusk any button is coming in the Play version. The free preview's home-row panel works now without the mute button or accessibility grant.</p></details>
       <details><summary>Is the setup safe?</summary><p>It uses the same official pairing mechanism Android provides to developers, and it grants exactly two things: "draw over other apps" (the filter itself) and an accessibility service (so the app can notice you holding the mute key — key events only, and with no internet permission nothing can leave the TV regardless). Both are visible and revocable in your TV's settings anytime.</p></details>
-      <details><summary>Which TVs work?</summary><p>Any Android TV / Google TV device on Android 8 or newer, plus Fire TV. See the <a href="#compat">compatibility table</a> for tested models.</p></details>
+      <details><summary>Which TVs work?</summary><p>Warm Dusk targets Android TV / Google TV on Android 8 or newer. Fire TV sideload support and exact model compatibility are still being tested. See the <a href="#compat">compatibility table</a> for measured results.</p></details>
     </div>
   </div>
 </section>
@@ -515,20 +513,24 @@
 <!-- ═══════════ 9 · FINAL CTA ═══════════ -->
 <section style="padding-top:24px">
   <div id="get" class="rv">
-    <h2 style="font-size:clamp(2rem,4.5vw,3rem)">Your eyes will notice tonight.</h2>
-    <p class="muted" style="margin:8px 0 26px">Free preview out now. Store version — and one-coffee Pro — once enough of you want it.</p>
-    <!-- PHASE 0 CTA: public binary-only release. App source remains private. -->
-    <div>
-      <a class="storebtn" href="https://github.com/conorgg123/warmdusk/releases/tag/v0.1.0-preview"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg><span>FREE PREVIEW<small>v0.1.0 · 0.6 MB APK</small></span></a>
-    </div>
-    <p class="small" style="margin-top:16px;color:var(--faint)">Verify your download — SHA-256:<br><code style="font-size:.68rem;word-break:break-all">D2966E50F8FA13B619816A3A1FD8D01C786036EED83BAD10FF01CF3368C3644D</code></p>
+    <h2 style="font-size:clamp(2rem,4.5vw,3rem)">Get the 2-minute setup at Play launch.</h2>
+    <p class="muted" style="margin:8px 0 12px">Plus founder pricing for the first 14 production days. No spam; launch and essential tester updates only.</p>
+    <form class="waitform" action="https://buttondown.com/api/emails/embed-subscribe/warmdusk" method="post">
+      <label for="waitlist-email" class="small" style="position:absolute;left:-10000px">Email address</label>
+      <input id="waitlist-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+      <input type="hidden" name="embed" value="1">
+      <input type="hidden" name="tag" value="play-launch">
+      <button class="cta primary" type="submit">Join the launch list</button>
+    </form>
+    <p class="small" style="color:var(--faint)">Buttondown stores the email you submit so Warm Dusk can send launch updates. Unsubscribe anytime.</p>
+    <p class="small" style="margin-top:22px"><a href="https://github.com/conorgg123/warmdusk/releases/tag/v0.1.0-preview">Free preview (advanced setup) →</a></p>
+    <p class="small" style="margin-top:12px;color:var(--faint)">Preview SHA-256:<br><code style="font-size:.68rem;word-break:break-all">D2966E50F8FA13B619816A3A1FD8D01C786036EED83BAD10FF01CF3368C3644D</code></p>
     <!--
     <div>
       <a class="storebtn" href="#"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5V3.5c0-.6.4-1.1.9-1.3l10.3 10.3L3.9 21.8c-.5-.2-.9-.7-.9-1.3zm13.8-5.4L6.05 21.34l8.49-8.49 2.26 2.25zm3.35-3.35c.4.3.65.77.65 1.25s-.25.95-.65 1.25l-2.15 1.25-2.5-2.5 2.5-2.5 2.15 1.25zM6.05 2.66l10.76 6.24-2.26 2.25-8.5-8.49z"/></svg><span>GET IT ON<small>Google Play</small></span></a>
       <a class="storebtn" href="#"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M13.2 2.6c.8-1 2.4-.7 2.8.5l4.6 13.9c.3 1-.4 2-1.5 2H4.9c-1.1 0-1.8-1-1.5-2L8 3.1c.4-1.2 2-1.5 2.8-.5l1.2 1.5 1.2-1.5zM12 8.5 9.5 15h5L12 8.5z"/></svg><span>AVAILABLE AT<small>Amazon Appstore</small></span></a>
     </div>
     -->
-    <p class="small" style="margin-top:18px"><a href="#setup">or set up from your computer →</a></p>
   </div>
 </section>
 
@@ -539,9 +541,10 @@
     <a href="#faq">Privacy — we collect nothing</a>
     <a href="#compat">Compatibility</a>
     <a href="#setup">Setup guide</a>
-    <a href="#">Contact</a>
+    <a href="mailto:feedback@warmdusk.com?subject=SETUP%20FAIL%20%E2%80%94%20%3Cyour%20TV%20model%3E&amp;body=TV%20brand%2Fmodel%3A%0AAndroid%2FGoogle%20TV%20version%3A%0AStep%20reached%3A%0AExact%20error%20%28paste%20verbatim%29%3A%0ANetwork%20notes%20%28optional%29%3A" title="Email feedback@warmdusk.com">Setup feedback</a>
   </nav>
-  <p>Made by two people who watch too many movies after dark.</p>
+  <p>The app has no network permission and never phones home; these channels exist because reporting is the only way we hear you.</p>
+  <p>Made after too many movies after dark.</p>
 </footer>
 
 <!-- ═══════════ video modal ═══════════ -->
