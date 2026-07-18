@@ -3,6 +3,10 @@ description: Something broke or behaved wrong
 title: "[Bug] "
 labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Prefer private email? Send the same details to feedback@warmdusk.com.
   - type: input
     id: device
     attributes:
@@ -38,6 +42,6 @@ body:
     id: logs
     attributes:
       label: adb logcat snippet (optional)
-      description: `adb logcat -d -s WarmDusk` or relevant tags if you have adb access
+      description: "`adb logcat -d -s WarmDusk` or relevant tags if you have adb access"
     validations:
       required: false
