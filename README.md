@@ -142,8 +142,12 @@ The filter and the hold-mute panel stay free. No ads. Ever.
 ## Support
 
 - Bugs → [bug report](../../issues/new?template=bug.yml)
-- Device results → [device report](../../issues/new?template=device-report.yml)
+- Setup stopped → [setup-failure report](../../issues/new?template=setup-fail.yml)
+- Setup worked → [device report](../../issues/new?template=device-report.yml)
+- Prefer private email → `feedback@warmdusk.com` · [open a prefilled setup-failure email](mailto:feedback@warmdusk.com?subject=SETUP%20FAIL%20%E2%80%94%20%3Cyour%20TV%20model%3E&body=TV%20brand%2Fmodel%3A%0AAndroid%2FGoogle%20TV%20version%3A%0AStep%20reached%3A%0AExact%20error%20%28paste%20verbatim%29%3A%0ANetwork%20notes%20%28optional%29%3A)
 - Site → [warmdusk.com](https://warmdusk.com)
+
+Email subject: `SETUP FAIL — <your TV model>`. Include TV brand/model, Android/Google TV version, furthest step reached, exact error text pasted verbatim, and optional network notes.
 
 ---
 

@@ -80,9 +80,11 @@ Full matrix → [COMPATIBILITY.md](../../blob/main/COMPATIBILITY.md)
 
 ## Report your device
 
-Every report updates the public table and helps recruit closed testers for the Play Store build.
+Please report failures **and** successes. The app has no network permission and never phones home; these channels exist because reporting is the only way we hear you.
 
-→ [New device report](../../issues/new?template=device-report.yml)
+- Failure → [setup-failure form](../../issues/new?template=setup-fail.yml)
+- Success → [device report](../../issues/new?template=device-report.yml)
+- Private email → `feedback@warmdusk.com` · [prefilled `SETUP FAIL — <your TV model>` email](mailto:feedback@warmdusk.com?subject=SETUP%20FAIL%20%E2%80%94%20%3Cyour%20TV%20model%3E&body=TV%20brand%2Fmodel%3A%0AAndroid%2FGoogle%20TV%20version%3A%0AStep%20reached%3A%0AExact%20error%20%28paste%20verbatim%29%3A%0ANetwork%20notes%20%28optional%29%3A)
 
 ---
 

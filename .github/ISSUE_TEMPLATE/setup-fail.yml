@@ -1,0 +1,55 @@
+name: Setup failure
+description: Tell us exactly where setup stopped so we can fix the path
+title: "[Setup fail] "
+labels: ["setup-failure"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please report failures and successes. Both are needed to measure setup honestly.
+        Warm Dusk has no network permission and never phones home, so a report is the only way we hear you.
+        Prefer private email? Send the same details to feedback@warmdusk.com.
+  - type: input
+    id: device
+    attributes:
+      label: TV brand and model
+      placeholder: Sony Bravia XR-77A80J, TCL 6-Series, onn. 4K Pro, ...
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Android TV or Google TV version
+      placeholder: Google TV / Android 12
+    validations:
+      required: true
+  - type: dropdown
+    id: step
+    attributes:
+      label: Furthest step reached
+      options:
+        - downloaded APK
+        - ADB installed
+        - developer options + debugging enabled
+        - found TV IP
+        - adb connected
+        - APK installed
+        - permissions granted
+        - filter visible
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Exact error text
+      description: Paste verbatim. Please remove personal information or public IP addresses.
+      placeholder: Paste the complete error text here.
+    validations:
+      required: true
+  - type: textarea
+    id: network
+    attributes:
+      label: Network notes (optional)
+      description: Same Wi-Fi, guest network, VPN, mesh, unusual router settings, or anything else relevant.
+    validations:
+      required: false

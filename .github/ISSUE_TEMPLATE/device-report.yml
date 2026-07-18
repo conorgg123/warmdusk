@@ -8,6 +8,7 @@ body:
       value: |
         Thanks for testing. Every report updates the public compatibility table.
         Package: `com.warmdusk.tv.preview` v0.1.0-preview
+        Prefer private email? Send the same details to feedback@warmdusk.com.
   - type: input
     id: brand
     attributes:
